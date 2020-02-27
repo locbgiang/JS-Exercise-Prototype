@@ -39,9 +39,26 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.stomach = [],
+  this.name = name,
+  this.age = age
 }
+Person.prototype.eat = function (someFood) {
+  if (this.stomach.length < 10) {
+    this.stomach.push(someFood);
+  }
+  return this.stomach;
+}
+Person.prototype.poop = function () {
+  this.stomach.length = 0;
+  return this.stomach;
+}
+Person.prototype.toString = function (){
+  return this.name+', '+this.age;
+}
+const personOne = new Person('Loc',26)
+console.log(personOne.toString())
 
 /*
   TASK 2
@@ -57,10 +74,31 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, milesPerGallon) {
+  this.model=model,
+  this.milesPerGallon=milesPerGallon,
+  this.tank=0,
+  this.odometer=0
 }
-
+Car.prototype.fill = function(gallons){
+  this.tank=this.tank+gallons;
+  return this.tank;
+}
+Car.prototype.drive = function(distance){
+  if(this.tank >= (distance/this.milesPerGallon)){
+    this.odometer = this.odometer + distance;
+  }
+  if (this.tank < (distance/this.milesPerGallon)){
+    this.odometer = this.odometer + (this.tank*this.milesPerGallon);
+    this.tank = 0;
+    return 'I ran out of fuel at '+this.odometer+' miles!'
+  }
+  this.tank = this.tank - (distance/this.milesPerGallon);
+  return 'I drove for '+this.odometer+' miles!';
+}
+const car1 = new Car('t-9000', 2);
+car1.fill(2);
+console.log(car1.drive(4.1))
 /*
   TASK 3
     - Write a Baby constructor subclassing Person.
@@ -68,10 +106,17 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
-
+function Baby(name,age,favoriteToy) {
+  Person.call(this,name,age);
+  this.favoriteToy=favoriteToy;
 }
-
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play=function(){
+  return 'Playing with '+this.favoriteToy;
+}
+const personTwo = new Baby('Fred',2,'toy car')
+console.log(personTwo.toString());
+console.log(personTwo.play());
 /* 
   TASK 4
 
